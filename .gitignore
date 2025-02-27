@@ -1,0 +1,87 @@
+# Eseguiamo l'esclusione dei file generati dalla build
+
+# Cartelle di build
+/build/
+/Build/
+/out/
+/bin/
+/obj/
+
+# File intermedi di compilazione
+*.o
+*.obj
+*.lo
+*.la
+*.al
+*.libs
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+*.app
+*.dSYM/
+
+# File di log e temporanei
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.cache
+
+# File di CMake generati
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CTestTestfile.cmake
+install_manifest.txt
+
+# File generati da IDE
+.vscode/
+.idea/
+*.iml
+*.sln
+*.vcxproj*
+*.csproj
+*.user
+*.ncb
+*.suo
+*.pdb
+*.idb
+*.opendb
+*.VC.db
+
+# Escludi librerie di terze parti scaricate
+/deps/
+/vendor/
+
+# Esempio: escludi file temporanei su Windows
+Thumbs.db
+Desktop.ini
+
+# Escludi cartelle specifiche di strumenti come clangd o compiler-specific
+.clangd/
+.clang-tidy/
+.clang-format
+
+# Escludi file di test o risultati temporanei
+test_results/
+coverage/
+*.gcno
+*.gcda
+*.gcov
+test/
+
+# Librerie o file compressi
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+
+# Docker build files
+dockerfile
+dockerfile_dev

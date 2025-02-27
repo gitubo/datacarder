@@ -1,0 +1,186 @@
+{
+	"version": "0.1",
+	"metadata": {
+		"name": "can",
+		"description": "CAN (standard)"
+	},    
+    "nodes": {
+        "1": {
+            "name": "main",
+            "type": "root",
+            "next_node": "999"
+        },
+        "999": {
+            "name": "lua",
+            "type": "function lua",
+            "next_node": "2",
+            "attributes": {
+                "code": "function json_to_bitstream(json, bitstream)\n  local identifier = json:get(\"/identifier\")\n  if identifier then\n    local complete_id = uint64_to_bits(identifier,29)\nlocal identifier = {}\nlocal offset = 0\nlocal length = 11\nfor i = 1, length do\nlocal index = offset + i\nif complete_id[index] then\ntable.insert(identifier, complete_id[index])\nelse\nbreak\nend\nend\nlocal extended_identifier = {}\nlocal offset = 11\nlocal length = 18\nfor i = 1, length do\nlocal index = offset + i\nif complete_id[index] then\ntable.insert(extended_identifier, complete_id[index])\nelse\nbreak\nend\nend\nlocal identifier_as_uint64 = bits_to_uint64(identifier)\nlocal extended_identifier_as_uint64 = bits_to_uint64(extended_identifier)\njson:set(\"/identifier\",identifier_as_uint64)\njson:set(\"/extended_identifier\",extended_identifier_as_uint64)\nend\nend"
+            }
+        },
+        "2": {
+            "name": "start_of_frame",
+            "type": "unsigned integer",
+            "next_node": "3",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "3": {
+            "name": "identifier",
+            "type": "unsigned integer",
+            "next_node": "4",
+            "attributes": {
+            "bit_length": 11,
+            "endianness": "little"
+            }
+        },
+        "4": {
+            "name": "SRR",
+            "type": "unsigned integer",
+            "next_node": "5",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "5": {
+            "name": "IDE",
+            "type": "unsigned integer",
+            "next_node": "6",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "6": {
+            "name": "extended_identifier",
+            "type": "unsigned integer",
+            "next_node": "7",
+            "attributes": {
+                "bit_length": 18,
+                "endianness": "little"
+            }
+        },
+        "7": {
+            "name": "RTR",
+            "type": "unsigned integer",
+            "next_node": "8",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "8": {
+            "name": "Reserved0",
+            "type": "unsigned integer",
+            "next_node": "9",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "9": {
+            "name": "Reserved1",
+            "type": "unsigned integer",
+            "next_node": "100",
+            "attributes": {
+                "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "100": {
+            "name": "DLC",
+            "type": "unsigned integer",
+            "next_node": "102",
+            "attributes": {
+                "bit_length": 4,
+                "endianness": "little"
+            }
+        },
+        "102": {
+            "name": "data",
+            "type": "array",
+            "next_node": "103",
+            "attributes": {
+                "repetitions": "/DLC",
+                "is_absolute_reference": true,
+                "array_node_id": "1000"
+            }
+        },
+        "1000": {
+            "name": "_data",
+            "type": "unsigned integer",
+            "next_node": "",
+            "attributes": {
+                "bit_length": 8,
+                "endianness": "little"
+            }
+        },
+        "103": {
+            "name": "CRC",
+            "type": "unsigned integer",
+            "next_node": "104",
+            "attributes": {
+            "bit_length": 15,
+            "endianness": "little"
+            }
+        },
+        "104": {
+            "name": "CRC_delimiter",
+            "type": "unsigned integer",
+            "next_node": "105",
+            "attributes": {
+            "bit_length": 1,
+            "endianness": "little"
+            }
+        },
+        "105": {
+            "name": "ACK",
+            "type": "unsigned integer",
+            "next_node": "106",
+            "attributes": {
+            "bit_length": 1,
+            "endianness": "little"
+            }
+        },
+        "106": {
+            "name": "ACK_delimiter",
+            "type": "unsigned integer",
+            "next_node": "107",
+            "attributes": {
+            "bit_length": 1,
+                "endianness": "little"
+            }
+        },
+        "107": {
+            "name": "EOF",
+            "type": "unsigned integer",
+            "next_node": "666",
+            "attributes": {
+            "bit_length": 7,
+                "endianness": "little"
+            }
+        },
+        "666": {
+            "name": "lua",
+            "type": "function lua",
+            "next_node": "",
+            "attributes": {
+                "code": "function bitstream_to_json(json, bitstream)\n  local identifier = json:get(\"/identifier\")\n  local extended_identifier = json:get(\"/extended_identifier\")\n  if identifier and extended_identifier then\n    local id = uint64_to_bits(identifier, 11)\n    local eid = uint64_to_bits(extended_identifier, 18)\n    for i = 1, #eid do\ntable.insert(id, eid[i])\nend\nlocal new_id = bits_to_uint64(id)\njson:set(\"/identifier\", new_id)\njson:erase(\"/extended_identifier\")\n  end\nend"
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
